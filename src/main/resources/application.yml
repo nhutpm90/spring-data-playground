@@ -1,0 +1,42 @@
+server:
+  port: 9977
+  
+springdoc:
+  swagger-ui:
+    path: /swagger-ui-custom.html
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type:
+#          descriptor:
+#            sql: trace
+
+logging:
+  level:
+    org:
+      hibernate:
+        stat: DEBUG
+        SQL: DEBUG
+        
+spring:
+  datasource:
+    url: jdbc:h2:mem:h2-demo
+    username: sa
+    password: 
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        generate_statistics: true
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true
+      
