@@ -18,28 +18,37 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
 	
 	List<Employee> findByLastNameLike(String lastName, Pageable pageable);
 	
-	Employee findByEmail(String email);
-	
-	List<Employee> findByIdIn(List<Long> ids);
-	
-	@Query("from Employee")
-	List<Employee> findAllEmployee();
-	
 	@Query("select e.firstName, e.lastName from Employee e")
 	List<Object[]> findAllEmployeePartialData();
 	
-	@Query("select e from Employee e where e.firstName=:firstName")
-	List<Employee> findEmployee(@Param("firstName") String firstName);
+	@Query("select e from Employee e where e.firstName=:firstName and e.gender=:gender")
+	List<Employee> findEmployeeByFirstNameAndGender(
+			@Param("firstName") String firstName,
+			@Param("gender") String gender,
+			Pageable pageable);
 	
-	@Query("select e from Employee e where e.gender=:gender")
-	List<Employee> findEmployeeByGender(@Param("gender") String gender, Pageable pageable);
+	List<Employee> findByIdIn(List<Long> ids);
 	
-	@Query(value = "select * from Employee where email=:email", nativeQuery = true)
-	Employee findEmployeeByEmail(@Param("email") String email);
+	@Query(value = "select * from Employee where gender=:gender", nativeQuery = true)
+	List<Employee> findEmployeeByGenderNativeQuery(@Param("gender") String gender, Pageable pageable);
 	
 	@Modifying
 	@Query("delete from Employee e where e.firstName=:firstName")
 	void deleteEmployee(@Param("firstName") String firstName);
 	
-	List<Employee> findByAddressCountry(String country);
 }
+	
+//	
+//	Employee findByEmail(String email);
+//	
+//	@Query("from Employee")
+//	List<Employee> findAllEmployee();
+//	
+//	@Query("select e from Employee e where e.gender=:gender")
+//	List<Employee> findEmployeeByGender(@Param("gender") String gender, Pageable pageable);
+//	
+//	@Query(value = "select * from Employee where email=:email", nativeQuery = true)
+//	Employee findEmployeeByEmailNativeQuery(@Param("email") String email);
+//	
+//	List<Employee> findByAddressCountry(String country);
+//}

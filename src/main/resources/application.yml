@@ -13,12 +13,12 @@ springdoc:
 #          descriptor:
 #            sql: trace
 
-logging:
-  level:
-    org:
-      hibernate:
-        stat: DEBUG
-        SQL: DEBUG
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        stat: DEBUG
+#        SQL: DEBUG
         
 spring:
   datasource:
@@ -32,7 +32,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        generate_statistics: true
+#        generate_statistics: true
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true

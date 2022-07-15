@@ -36,7 +36,8 @@ public class EmployeeService {
 		return this.employeeRepo.findAll(pageRequest);
 	}
 	
-	public Page<Employee> filterEmployees(String gender, String sortBy, Sort.Direction sortDirection, int page, int size) {
+	public Page<Employee> filterEmployees(String gender, String sortBy, 
+			Sort.Direction sortDirection, int page, int size) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
 		Root<Employee> root = query.from(Employee.class);
@@ -50,21 +51,28 @@ public class EmployeeService {
 		
 		query.where(predicate);
 		
-		if(sortDirection.equals(Sort.Direction.ASC)) {
-			query.orderBy(cb.asc(root.get(sortBy)));
-		} else {
-			query.orderBy(cb.desc(root.get(sortBy)));
+		if(sortBy != null && sortDirection != null) {
+			if(sortDirection.equals(Sort.Direction.ASC)) {
+				query.orderBy(cb.asc(root.get(sortBy)));
+			} else {
+				query.orderBy(cb.desc(root.get(sortBy)));
+			}
 		}
 		
 		List<Employee> employees = em.createQuery(query)
 				.setFirstResult(page * size).setMaxResults(size)
 				.getResultList();
 		
-		Sort sort = Sort.by(sortDirection, sortBy);
+		Sort sort = Sort.unsorted();
+		if(sortBy != null && sortDirection != null) {
+			sort = Sort.by(sortDirection, sortBy);
+		}
 		PageRequest pageRequest = PageRequest.of(page, size, sort);
+				
 		Long count = this.countEmployee(predicate);
+		Page<Employee> ret = new PageImpl<>(employees, pageRequest, count);
 		
-		return new PageImpl<>(employees, pageRequest, count);
+		return ret;
 	}
 	
 	private Long countEmployee(Predicate conditions) {
